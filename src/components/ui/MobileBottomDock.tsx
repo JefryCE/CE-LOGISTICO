@@ -245,3 +245,4 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
     </>
   );
 };
+

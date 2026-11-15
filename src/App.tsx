@@ -16,7 +16,6 @@ import { KpiStrip } from './components/ui/KpiStrip';
 import { RightInspectorPanel } from './components/ui/RightInspectorPanel';
 import { ShipmentTimelineCard } from './components/ui/ShipmentTimelineCard';
 import { FleetSwitcherCard } from './components/ui/FleetSwitcherCard';
-import { ZyroAiAssistantModal } from './components/ui/ZyroAiAssistantModal';
 import { MobileBottomDock } from './components/ui/MobileBottomDock';
 import { useViewport } from './hooks/useViewport';
 
@@ -40,7 +39,6 @@ export const App: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [simSpeed, setSimSpeed] = useState(1);
   const [isDark, setIsDark] = useState(false);
-  const [isAiOpen, setIsAiOpen] = useState(false);
   const [cameraCommand, setCameraCommand] = useState<CameraCommand | null>(null);
   const [simSeconds, setSimSeconds] = useState(9 * 3600 + 44 * 60); // 09:44
 
@@ -187,30 +185,6 @@ export const App: React.FC = () => {
     );
   };
 
-  const handleApplyAiOptimization = () => {
-    setForklifts((prev) =>
-      prev.map((fl) => {
-        if (fl.siteId === activeSite.id && fl.status === 'Disponible') {
-          return {
-            ...fl,
-            status: 'Descargando',
-            taskLabel: `Asignado por IA · Apoyo rápido ${activeSite.id}`,
-            progressPct: 95,
-            carryingBluePallet: true,
-          };
-        }
-        return fl;
-      })
-    );
-    setSites((prev) =>
-      prev.map((s) =>
-        s.id === activeSite.id
-          ? { ...s, onTimePct: Math.min(99.9, +(s.onTimePct + 0.3).toFixed(1)) }
-          : s
-      )
-    );
-  };
-
   return (
     <div className="ce-app-shell" data-device={deviceType}>
       {/* 1. Barra Superior Corporativa Canal Ejecutivo */}
@@ -224,14 +198,12 @@ export const App: React.FC = () => {
         isPaused={isPaused}
         simSpeed={simSpeed}
         isDark={isDark}
-        isAiOpen={isAiOpen}
         deviceType={deviceType}
         onChangeScope={handleChangeScope}
         onSelectObject={handleSelectObject}
         onTogglePause={() => setIsPaused((p) => !p)}
         onCycleSpeed={() => setSimSpeed((s) => (s === 1 ? 2 : s === 2 ? 4 : 1))}
         onToggleTheme={() => setIsDark((d) => !d)}
-        onToggleAi={() => setIsAiOpen((o) => !o)}
       />
 
       {/* 2. Franja de 3 KPIs (Carrusel horizontal en móvil, fila en tablet/PC) */}
@@ -242,15 +214,7 @@ export const App: React.FC = () => {
         activeSite={activeSite}
       />
 
-      {/* 3. Copiloto IA + Guía Zyro (Desplegable bajo demanda) */}
-      <ZyroAiAssistantModal
-        isOpen={isAiOpen}
-        viewScope={viewScope}
-        onClose={() => setIsAiOpen(false)}
-        onApplyOptimization={handleApplyAiOptimization}
-      />
-
-      {/* 4. Controles de Cámara + Inspector Contextual Derecho (Desktop y Tablet) */}
+      {/* 3. Controles de Cámara + Inspector Contextual Derecho (Desktop y Tablet) */}
       {!isMobile && (
         <RightInspectorPanel
           activeSite={activeSite}

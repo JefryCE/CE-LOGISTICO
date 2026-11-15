@@ -54,17 +54,16 @@ export const ShipmentTimelineCard: React.FC<ShipmentTimelineCardProps> = ({
             const stateClass = step.active
               ? 'is-active'
               : step.completed
-              ? 'is-done'
-              : 'is-pending';
+                ? 'is-done'
+                : 'is-pending';
 
             return (
               <li key={index} className={`ce-stepper__item ${stateClass}`}>
                 <div className="ce-stepper__node-row">
                   {index > 0 && (
                     <span
-                      className={`ce-stepper__line ${
-                        step.completed || step.active ? 'is-filled' : ''
-                      }`}
+                      className={`ce-stepper__line ${step.completed || step.active ? 'is-filled' : ''
+                        }`}
                     />
                   )}
                   <span className="ce-stepper__circle">
@@ -97,12 +96,11 @@ export const ShipmentTimelineCard: React.FC<ShipmentTimelineCardProps> = ({
             Hacia: {trackedTruck.destination}
           </span>
           <span
-            className={`ce-shipment-mini__status ${
-              trackedTruck.status === 'Cargando' ||
-              trackedTruck.status === 'Descargando'
+            className={`ce-shipment-mini__status ${trackedTruck.status === 'Cargando' ||
+                trackedTruck.status === 'Descargando'
                 ? 'is-green'
                 : 'is-blue'
-            }`}
+              }`}
           >
             ● {trackedTruck.status}
           </span>

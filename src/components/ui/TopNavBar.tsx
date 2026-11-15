@@ -9,7 +9,6 @@ import {
   Pause,
   Play,
   Search,
-  Sparkles,
   Sun,
   X,
 } from 'lucide-react';
@@ -33,14 +32,12 @@ interface TopNavBarProps {
   isPaused: boolean;
   simSpeed: number;
   isDark: boolean;
-  isAiOpen: boolean;
   deviceType: DeviceType;
   onChangeScope: (scope: ViewScope) => void;
   onSelectObject: (obj: SelectedObject, siteId?: SiteId) => void;
   onTogglePause: () => void;
   onCycleSpeed: () => void;
   onToggleTheme: () => void;
-  onToggleAi: () => void;
 }
 
 export const TopNavBar: React.FC<TopNavBarProps> = ({
@@ -53,14 +50,12 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   isPaused,
   simSpeed,
   isDark,
-  isAiOpen,
   deviceType,
   onChangeScope,
   onSelectObject,
   onTogglePause,
   onCycleSpeed,
   onToggleTheme,
-  onToggleAi,
 }) => {
   const [query, setQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -432,18 +427,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
             </button>
           )}
         </div>
-
-        {/* IA Activa / Guía Zyro Button (§6.4 & §8.1) */}
-        <button
-          type="button"
-          className={`ce-ai-chip ${isAiOpen ? 'is-active' : ''}`}
-          onClick={onToggleAi}
-          title="Abrir Copiloto IA y Guía Zyro"
-        >
-          <span className="ce-ai-chip__pulse" aria-hidden="true" />
-          <Sparkles size={14} />
-          {!isMobile && <span>IA activa</span>}
-        </button>
 
         {!isMobile ? (
           <>
