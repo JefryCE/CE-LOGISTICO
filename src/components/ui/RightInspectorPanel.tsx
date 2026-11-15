@@ -29,6 +29,7 @@ interface RightInspectorPanelProps {
   forklifts: ForkliftEntity[];
   selectedObject: SelectedObject;
   followTarget: boolean;
+  embedded?: boolean;
   onToggleFollow: () => void;
   onClearSelection: () => void;
   onCameraAction: (type: CameraCommand['type']) => void;
@@ -61,6 +62,7 @@ export const RightInspectorPanel: React.FC<RightInspectorPanelProps> = ({
   forklifts,
   selectedObject,
   followTarget,
+  embedded = false,
   onToggleFollow,
   onClearSelection,
   onCameraAction,
@@ -107,58 +109,67 @@ export const RightInspectorPanel: React.FC<RightInspectorPanelProps> = ({
   );
 
   return (
-    <aside className="ce-right-hud" aria-label="Controles de cámara e inspector">
+    <aside
+      className={embedded ? 'ce-right-hud ce-right-hud--embedded' : 'ce-right-hud'}
+      aria-label="Controles de cámara e inspector"
+    >
       {/* Vertical Camera Controls Toolbar (exact match to video!) */}
-      <div className="ce-cam-toolbar">
-        <button
-          type="button"
-          className="ce-cam-btn"
-          onClick={() => onCameraAction('zoomIn')}
-          title="Acercar cámara"
-          aria-label="Acercar cámara"
-        >
-          <Plus size={16} />
-        </button>
-        <button
-          type="button"
-          className="ce-cam-btn"
-          onClick={() => onCameraAction('zoomOut')}
-          title="Alejar cámara"
-          aria-label="Alejar cámara"
-        >
-          <Minus size={16} />
-        </button>
-        <button
-          type="button"
-          className="ce-cam-btn"
-          onClick={() => onCameraAction('rotateLeft')}
-          title="Rotar 45° a la izquierda"
-          aria-label="Rotar 45 grados a la izquierda"
-        >
-          <RotateCcw size={15} />
-        </button>
-        <button
-          type="button"
-          className="ce-cam-btn"
-          onClick={() => onCameraAction('rotateRight')}
-          title="Rotar 45° a la derecha"
-          aria-label="Rotar 45 grados a la derecha"
-        >
-          <RotateCw size={15} />
-        </button>
-        <button
-          type="button"
-          className="ce-cam-btn"
-          onClick={() => onCameraAction('reset')}
-          title="Restablecer vista de sede"
-          aria-label="Restablecer vista de sede"
-        >
-          <Home size={15} />
-        </button>
-      </div>
+      {!embedded && (
+        <div className="ce-cam-toolbar">
+          <button
+            type="button"
+            className="ce-cam-btn"
+            onClick={() => onCameraAction('zoomIn')}
+            title="Acercar cámara"
+            aria-label="Acercar cámara"
+          >
+            <Plus size={16} />
+          </button>
+          <button
+            type="button"
+            className="ce-cam-btn"
+            onClick={() => onCameraAction('zoomOut')}
+            title="Alejar cámara"
+            aria-label="Alejar cámara"
+          >
+            <Minus size={16} />
+          </button>
+          <button
+            type="button"
+            className="ce-cam-btn"
+            onClick={() => onCameraAction('rotateLeft')}
+            title="Rotar 45° a la izquierda"
+            aria-label="Rotar 45 grados a la izquierda"
+          >
+            <RotateCcw size={15} />
+          </button>
+          <button
+            type="button"
+            className="ce-cam-btn"
+            onClick={() => onCameraAction('rotateRight')}
+            title="Rotar 45° a la derecha"
+            aria-label="Rotar 45 grados a la derecha"
+          >
+            <RotateCw size={15} />
+          </button>
+          <button
+            type="button"
+            className="ce-cam-btn"
+            onClick={() => onCameraAction('reset')}
+            title="Restablecer vista de sede"
+            aria-label="Restablecer vista de sede"
+          >
+            <Home size={15} />
+          </button>
+        </div>
+      )}
 
       {/* Context Inspector Card */}
-      <div className="ce-inspector-card">
+      <div
+        className={
+          embedded ? 'ce-inspector-card ce-inspector-card--embedded' : 'ce-inspector-card'
+        }
+      >
         {selectedTruck ? (
           /* === MODE B: SELECTED TRUCK INSPECTOR === */
           <>

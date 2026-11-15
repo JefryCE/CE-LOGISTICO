@@ -11,6 +11,7 @@ import { SiteId, TruckEntity } from '../../types/logistics';
 
 interface ShipmentTimelineCardProps {
   trackedTruck: TruckEntity;
+  embedded?: boolean;
   onCycleTruck: () => void;
   onFocusTruck: (truckId: string, siteId: SiteId) => void;
 }
@@ -19,12 +20,15 @@ const STEP_ICONS = [ClipboardCheck, PackageOpen, Package, Truck, Check];
 
 export const ShipmentTimelineCard: React.FC<ShipmentTimelineCardProps> = ({
   trackedTruck,
+  embedded = false,
   onCycleTruck,
   onFocusTruck,
 }) => {
   return (
     <section
-      className="ce-tracking-card"
+      className={
+        embedded ? 'ce-tracking-card ce-tracking-card--embedded' : 'ce-tracking-card'
+      }
       aria-label="Seguimiento de envío en tiempo real"
     >
       <div className="ce-tracking-card__main">

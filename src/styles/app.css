@@ -1739,36 +1739,397 @@ a:focus-visible {
 }
 
 /* ==========================================================================
-   RESPONSIVE ADAPTATIVO (§7.5)
+   MODO EMBEBIDO & DOCK ADAPTATIVO (TABLET Y CELULAR)
    ========================================================================== */
-@media (max-width: 1280px) {
+.ce-brand-isotipo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+.ce-right-hud--embedded {
+  position: static;
+  width: 100%;
+}
+
+.ce-inspector-card--embedded,
+.ce-tracking-card--embedded,
+.ce-switcher-card--embedded {
+  position: static !important;
+  width: 100% !important;
+  max-height: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 6px 2px !important;
+}
+
+.ce-tracking-card--embedded {
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ce-tracking-card--embedded .ce-shipment-mini {
+  width: 100%;
+}
+
+/* Barra de cámara táctil flotante en móvil */
+.ce-mobile-cam-bar {
+  position: fixed;
+  right: 12px;
+  bottom: 72px;
+  z-index: 26;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 5px;
+  background: var(--ce-surface-card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--ce-border-default);
+  border-radius: var(--ce-radius-md);
+  box-shadow: var(--ce-shadow-1);
+  transition: bottom 0.22s ease;
+}
+
+.ce-mobile-cam-bar.is-raised {
+  bottom: calc(46dvh + 16px);
+}
+
+/* Dock inferior unificado para Tablet y Celular */
+.ce-bottom-dock {
+  position: fixed;
+  z-index: 30;
+  background: var(--ce-surface-card);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--ce-border-default);
+  box-shadow: var(--ce-shadow-3);
+  display: flex;
+  flex-direction: column;
+}
+
+.ce-bottom-dock--tablet {
+  left: 20px;
+  bottom: 18px;
+  width: calc(100vw - 392px);
+  border-radius: var(--ce-radius-lg);
+  padding: 10px 14px;
+}
+
+.ce-bottom-dock--mobile {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 14px 14px 0 0;
+  border-bottom: none;
+  padding: 8px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  max-height: 46dvh;
+}
+
+.ce-bottom-dock__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ce-bottom-dock__tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ce-dock-tab {
+  min-height: 36px;
+  padding: 6px 11px;
+  border: none;
+  border-radius: var(--ce-radius-sm);
+  background: transparent;
+  color: var(--ce-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.ce-dock-tab.is-active {
+  background: var(--ce-surface-active);
+  color: var(--ce-blue-500);
+}
+
+.ce-dock-toggle {
+  min-height: 36px;
+  padding: 4px 10px;
+  border: 1px solid var(--ce-border-default);
+  border-radius: var(--ce-radius-pill);
+  background: var(--ce-surface-subtle);
+  color: var(--ce-text-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  max-width: 52%;
+}
+
+.ce-dock-toggle__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ce-bottom-dock__content {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ce-border-default);
+  overflow-y: auto;
+  max-height: calc(46dvh - 64px);
+}
+
+/* Menú Móvil Azul Noche (§7.1) */
+.ce-mobile-drawer {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: var(--ce-night-950);
+  color: #ffffff;
+  padding: 16px 20px 20px;
+  border-bottom: 1px solid var(--ce-night-700);
+  box-shadow: var(--ce-shadow-3);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 55;
+}
+
+.ce-mobile-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ce-night-800);
+}
+
+.ce-mobile-drawer__head .ce-brand-logo {
+  height: 24px;
+}
+
+.ce-mobile-drawer__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.ce-mobile-drawer__alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   RESPONSIVE ADAPTATIVO POR TIPO DE PANTALLA (§7.5)
+   ========================================================================== */
+
+/* Escritorio estándar (1024px - 1279px) */
+@media (max-width: 1279px) {
+  .ce-brand-product {
+    display: none;
+  }
+  .ce-search {
+    max-width: 280px;
+  }
   .ce-zyro-panel {
     left: 20px;
     top: 175px;
   }
   .ce-tracking-card {
-    width: calc(100vw - 414px);
+    width: calc(100vw - 418px);
+    padding: 12px 14px;
   }
   .ce-shipment-mini {
     width: 185px;
   }
 }
 
-@media (max-width: 960px) {
-  .ce-brand-product,
-  .ce-user-chip__text {
+/* Tablet (768px - 1023px) */
+@media (max-width: 1023px) {
+  .ce-topbar {
+    height: 64px;
+    padding: 0 14px;
+    gap: 10px;
+  }
+  .ce-brand-logo {
+    height: 26px;
+  }
+  .ce-brand-bar,
+  .ce-user-chip__text,
+  .ce-live-label {
     display: none;
   }
+  .ce-search {
+    flex: 1 1 160px;
+    max-width: 210px;
+  }
   .ce-kpi-strip {
-    flex-direction: column;
+    top: 76px;
+    left: 16px;
     gap: 8px;
   }
   .ce-kpi-card {
-    min-width: 165px;
+    min-width: 148px;
+    padding: 9px 11px;
+    gap: 8px;
+  }
+  .ce-kpi-card__icon {
+    width: 32px;
+    height: 32px;
+  }
+  .ce-kpi-card__value {
+    font-size: 18px;
+  }
+  .ce-right-hud {
+    top: 76px;
+    right: 16px;
+  }
+  .ce-inspector-card {
+    width: 296px;
+    max-height: calc(100dvh - 100px);
+  }
+}
+
+/* Celular (< 768px) */
+@media (max-width: 767px) {
+  .ce-app-shell {
+    height: 100dvh;
+  }
+  .ce-topbar {
+    height: 60px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .ce-brand-bar,
+  .ce-brand-product {
+    display: none;
+  }
+  .ce-search.is-mobile-open {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    max-width: none;
+    padding: 10px 12px;
+    background: var(--ce-surface-header);
+    border-bottom: 1px solid var(--ce-border-default);
+    z-index: 56;
+  }
+  .ce-search.is-mobile-open .ce-search__icon {
+    left: 22px;
+  }
+  .ce-search.is-mobile-open .ce-search__clear {
+    right: 18px;
+  }
+  .ce-site-selector {
+    margin-left: 0;
+    flex: 1;
+    min-width: 0;
+    padding: 3px 6px;
+  }
+  .ce-site-selector__meta {
+    min-width: 0;
+  }
+  .ce-site-selector__name {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ce-site-selector__sub,
+  .ce-site-selector__nav {
+    display: none;
+  }
+  .ce-site-dropdown {
+    width: min(310px, calc(100vw - 24px));
+    left: -36px;
+  }
+  .ce-topbar__actions {
+    gap: 6px;
+  }
+  .ce-live-pill {
+    height: 32px;
+    padding: 0 7px;
+    gap: 5px;
+  }
+  .ce-ai-chip {
+    height: 32px;
+    padding: 0 9px;
+  }
+  .ce-icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Carrusel horizontal de KPIs en móvil (§7.4) */
+  .ce-kpi-strip {
+    top: 68px;
+    left: 0;
+    right: 0;
+    padding: 0 12px;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .ce-kpi-strip::-webkit-scrollbar {
+    display: none;
+  }
+  .ce-kpi-card {
+    min-width: 196px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
     padding: 9px 12px;
   }
-  .ce-tracking-card {
-    display: none;
+  .ce-kpi-card__value {
+    font-size: 19px;
+  }
+
+  /* Objetivos táctiles >= 40-44px en móvil (§7.5) */
+  .ce-cam-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .ce-dock-tab {
+    min-height: 42px;
+  }
+
+  /* Stepper en móvil: compacto y legible */
+  .ce-stepper__label {
+    font-size: 10px;
+  }
+  .ce-stepper__time {
+    font-size: 9.5px;
+  }
+  .ce-stepper__circle {
+    width: 24px;
+    height: 24px;
+  }
+  .ce-stepper__item.is-active .ce-stepper__circle {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Zyro Copiloto IA centrado y scrolleable en móvil */
+  .ce-zyro-panel {
+    left: 12px;
+    right: 12px;
+    top: 68px;
+    width: auto;
+    max-height: calc(100dvh - 140px);
+    overflow-y: auto;
   }
 }
 

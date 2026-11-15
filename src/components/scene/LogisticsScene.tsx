@@ -12,6 +12,7 @@ import {
   ViewScope,
   WarehouseSite,
 } from '../../types/logistics';
+import { DeviceType } from '../../hooks/useViewport';
 import { NETWORK_CAMERA_PRESET } from '../../data/logisticsData';
 import { computeForkliftPose, computeTruckPose, getDockFaceZ } from '../../utils/kinematics';
 import { WarehouseFacility } from './WarehouseFacility';
@@ -33,6 +34,8 @@ interface LogisticsSceneProps {
   isPaused: boolean;
   simSpeed: number;
   isDark: boolean;
+  deviceType: DeviceType;
+  viewportAspect: number;
   cameraCommand: CameraCommand | null;
   onSelectSite: (siteId: SiteId) => void;
   onSelectObject: (obj: SelectedObject, siteId?: SiteId) => void;
@@ -91,6 +94,8 @@ const CameraAndClockController: React.FC<SceneUpdaterProps> = ({
   followTarget,
   isPaused,
   simSpeed,
+  deviceType,
+  viewportAspect,
   cameraCommand,
   simTimeRef,
 }) => {
@@ -101,21 +106,53 @@ const CameraAndClockController: React.FC<SceneUpdaterProps> = ({
   const isTweening = useRef(true);
   const lastCmdSeq = useRef(0);
 
+  // Pull camera slightly back on portrait / narrow viewports so full facilities stay framed
+  const distScale =
+    viewportAspect < 0.75 ? 1.42 : viewportAspect < 1.15 ? 1.2 : 1;
+
+  // Dynamically adapt FOV by device type
+  useEffect(() => {
+    if (camera instanceof THREE.PerspectiveCamera) {
+      const targetFov =
+        deviceType === 'mobile' && viewportAspect < 1
+          ? 48
+          : deviceType === 'tablet'
+          ? 42
+          : 36;
+      if (camera.fov !== targetFov) {
+        camera.fov = targetFov;
+        camera.updateProjectionMatrix();
+      }
+    }
+  }, [camera, deviceType, viewportAspect]);
+
+  const applyScaledPreset = (
+    pos: [number, number, number],
+    target: [number, number, number]
+  ) => {
+    const tVec = new THREE.Vector3(...target);
+    const pVec = new THREE.Vector3(...pos);
+    const offset = pVec.sub(tVec).multiplyScalar(distScale);
+    desiredTarget.current.copy(tVec);
+    desiredPos.current.copy(tVec).add(offset);
+  };
+
   // Trigger camera glide when switching site / network scope
   useEffect(() => {
     if (viewScope === 'ALL') {
-      desiredPos.current.set(...NETWORK_CAMERA_PRESET.position);
-      desiredTarget.current.set(...NETWORK_CAMERA_PRESET.target);
+      applyScaledPreset(
+        NETWORK_CAMERA_PRESET.position,
+        NETWORK_CAMERA_PRESET.target
+      );
       isTweening.current = true;
       return;
     }
     const site = sites.find((s) => s.id === viewScope);
     if (site) {
-      desiredPos.current.set(...site.cameraPreset.position);
-      desiredTarget.current.set(...site.cameraPreset.target);
+      applyScaledPreset(site.cameraPreset.position, site.cameraPreset.target);
       isTweening.current = true;
     }
-  }, [viewScope, sites]);
+  }, [viewScope, sites, distScale]);
 
   // Trigger subtle focus glide when selecting a specific entity
   useEffect(() => {
@@ -201,12 +238,13 @@ const CameraAndClockController: React.FC<SceneUpdaterProps> = ({
       isTweening.current = true;
     } else if (cameraCommand.type === 'reset') {
       if (viewScope === 'ALL') {
-        desiredPos.current.set(...NETWORK_CAMERA_PRESET.position);
-        desiredTarget.current.set(...NETWORK_CAMERA_PRESET.target);
+        applyScaledPreset(
+          NETWORK_CAMERA_PRESET.position,
+          NETWORK_CAMERA_PRESET.target
+        );
       } else {
         const site = sites.find((s) => s.id === viewScope) || sites[0];
-        desiredPos.current.set(...site.cameraPreset.position);
-        desiredTarget.current.set(...site.cameraPreset.target);
+        applyScaledPreset(site.cameraPreset.position, site.cameraPreset.target);
       }
       isTweening.current = true;
     } else if (cameraCommand.type === 'focusObject' && selectedObject) {
@@ -270,7 +308,11 @@ const CameraAndClockController: React.FC<SceneUpdaterProps> = ({
       maxPolarAngle={Math.PI / 2.15}
       minPolarAngle={0.25}
       minDistance={12}
-      maxDistance={240}
+      maxDistance={280}
+      touches={{
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_PAN,
+      }}
       onStart={() => {
         isTweening.current = false;
       }}
@@ -279,8 +321,17 @@ const CameraAndClockController: React.FC<SceneUpdaterProps> = ({
 };
 
 export const LogisticsScene: React.FC<LogisticsSceneProps> = (props) => {
-  const { sites, trucks, forklifts, viewScope, selectedObject, isDark, onSelectSite, onSelectObject } =
-    props;
+  const {
+    sites,
+    trucks,
+    forklifts,
+    viewScope,
+    selectedObject,
+    isDark,
+    deviceType,
+    onSelectSite,
+    onSelectObject,
+  } = props;
   const simTimeRef = useRef(0);
 
   const groundColor = isDark ? '#071124' : '#E6ECF5';
@@ -290,7 +341,7 @@ export const LogisticsScene: React.FC<LogisticsSceneProps> = (props) => {
     <div className="ce-canvas-wrap">
       <Canvas
         shadows
-        dpr={[1, 2]}
+        dpr={deviceType === 'mobile' ? [1, 1.5] : [1, 2]}
         camera={{ position: [-92, 27, 94], fov: 36, near: 0.5, far: 650 }}
         onPointerMissed={() => onSelectObject(null)}
       >

@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Menu,
   Moon,
   Pause,
   Play,
@@ -20,6 +21,7 @@ import {
   ViewScope,
   WarehouseSite,
 } from '../../types/logistics';
+import { DeviceType } from '../../hooks/useViewport';
 
 interface TopNavBarProps {
   sites: WarehouseSite[];
@@ -32,6 +34,7 @@ interface TopNavBarProps {
   simSpeed: number;
   isDark: boolean;
   isAiOpen: boolean;
+  deviceType: DeviceType;
   onChangeScope: (scope: ViewScope) => void;
   onSelectObject: (obj: SelectedObject, siteId?: SiteId) => void;
   onTogglePause: () => void;
@@ -51,6 +54,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   simSpeed,
   isDark,
   isAiOpen,
+  deviceType,
   onChangeScope,
   onSelectObject,
   onTogglePause,
@@ -60,10 +64,14 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [siteMenuOpen, setSiteMenuOpen] = useState(false);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const isMobile = deviceType === 'mobile';
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -151,7 +159,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
 
   return (
     <header className="ce-topbar">
-      {/* Left: Untouched Master Logo of Canal Ejecutivo (§2.1 & §7.1) */}
+      {/* Left: Untouched Master Logo of Canal Ejecutivo (§2.1, §2.5 & §7.1) */}
       <div className="ce-topbar__brand">
         <a
           href="#inicio"
@@ -162,15 +170,27 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           }}
           title="Canal Ejecutivo · Inicio"
         >
-          <img
-            src={
-              isDark
-                ? '/brand/ce-logo-horizontal-blanco.png'
-                : '/brand/ce-logo-horizontal-azul.png'
-            }
-            alt="Canal Ejecutivo"
-            className="ce-brand-logo"
-          />
+          {isMobile ? (
+            <img
+              src={
+                isDark
+                  ? '/brand/ce-isotipo-blanco.png'
+                  : '/brand/ce-isotipo-azul.png'
+              }
+              alt="Canal Ejecutivo"
+              className="ce-brand-isotipo"
+            />
+          ) : (
+            <img
+              src={
+                isDark
+                  ? '/brand/ce-logo-horizontal-blanco.png'
+                  : '/brand/ce-logo-horizontal-azul.png'
+              }
+              alt="Canal Ejecutivo"
+              className="ce-brand-logo"
+            />
+          )}
         </a>
         <span className="ce-brand-bar" aria-hidden="true" />
         <div className="ce-brand-product">
@@ -179,61 +199,67 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         </div>
       </div>
 
-      {/* Center-Left: Global Search Input */}
-      <div className="ce-search">
-        <Search size={16} className="ce-search__icon" />
-        <input
-          ref={searchInputRef}
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setSearchFocused(true)}
-          placeholder="Buscar sedes, camiones, montacargas, pallets, envíos..."
-          aria-label="Buscar en la red logística"
-          className="ce-search__input"
-        />
-        {query ? (
-          <button
-            type="button"
-            className="ce-search__clear"
-            onClick={() => setQuery('')}
-            aria-label="Limpiar búsqueda"
-          >
-            <X size={14} />
-          </button>
-        ) : (
-          <kbd className="ce-search__kbd">/</kbd>
-        )}
+      {/* Center-Left: Global Search Input (Desktop/Tablet inline, Mobile toggleable overlay) */}
+      {(!isMobile || mobileSearchOpen) && (
+        <div className={`ce-search ${mobileSearchOpen ? 'is-mobile-open' : ''}`}>
+          <Search size={16} className="ce-search__icon" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            placeholder="Buscar sedes, camiones, envíos..."
+            aria-label="Buscar en la red logística"
+            className="ce-search__input"
+          />
+          {query || mobileSearchOpen ? (
+            <button
+              type="button"
+              className="ce-search__clear"
+              onClick={() => {
+                setQuery('');
+                setMobileSearchOpen(false);
+              }}
+              aria-label="Cerrar búsqueda"
+            >
+              <X size={14} />
+            </button>
+          ) : (
+            <kbd className="ce-search__kbd">/</kbd>
+          )}
 
-        {searchFocused && normalizedQ && (
-          <div className="ce-search__dropdown">
-            {searchResults.length === 0 ? (
-              <div className="ce-search__empty">
-                Sin coincidencias para «{query}»
-              </div>
-            ) : (
-              searchResults.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  className="ce-search__item"
-                  onClick={() => {
-                    item.onPick();
-                    setQuery('');
-                    setSearchFocused(false);
-                  }}
-                >
-                  <span className="ce-badge-code">{item.badge}</span>
-                  <div className="ce-search__item-body">
-                    <span className="ce-search__item-title">{item.title}</span>
-                    <span className="ce-search__item-sub">{item.sub}</span>
-                  </div>
-                </button>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+          {searchFocused && normalizedQ && (
+            <div className="ce-search__dropdown">
+              {searchResults.length === 0 ? (
+                <div className="ce-search__empty">
+                  Sin coincidencias para «{query}»
+                </div>
+              ) : (
+                searchResults.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    className="ce-search__item"
+                    onClick={() => {
+                      item.onPick();
+                      setQuery('');
+                      setSearchFocused(false);
+                      setMobileSearchOpen(false);
+                    }}
+                  >
+                    <span className="ce-badge-code">{item.badge}</span>
+                    <div className="ce-search__item-body">
+                      <span className="ce-search__item-title">{item.title}</span>
+                      <span className="ce-search__item-sub">{item.sub}</span>
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Center-Right: Multi-Site Network Selector Dropdown (exact clone of frame_007!) */}
       <div className="ce-site-selector" ref={dropdownRef}>
@@ -360,12 +386,31 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
 
       {/* Right Controls: Live Status, AI Copilot (Zyro), Theme, Notifications & User */}
       <div className="ce-topbar__actions">
+        {isMobile && (
+          <button
+            type="button"
+            className="ce-icon-btn"
+            onClick={() => {
+              setMobileSearchOpen((s) => !s);
+              setTimeout(() => searchInputRef.current?.focus(), 60);
+            }}
+            aria-label="Buscar"
+            title="Buscar"
+          >
+            <Search size={17} />
+          </button>
+        )}
+
         <div className="ce-live-pill">
           <span
             className={`ce-live-dot ${isPaused ? 'is-paused' : ''}`}
             aria-hidden="true"
           />
-          <span className="ce-live-label">{isPaused ? 'Pausado' : 'En vivo'}</span>
+          {!isMobile && (
+            <span className="ce-live-label">
+              {isPaused ? 'Pausado' : 'En vivo'}
+            </span>
+          )}
           <span className="ce-live-clock ce-mono">{clockText}</span>
           <button
             type="button"
@@ -376,14 +421,16 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           >
             {isPaused ? <Play size={12} /> : <Pause size={12} />}
           </button>
-          <button
-            type="button"
-            className="ce-live-speed ce-mono"
-            onClick={onCycleSpeed}
-            title="Cambiar velocidad de simulación"
-          >
-            {simSpeed}×
-          </button>
+          {!isMobile && (
+            <button
+              type="button"
+              className="ce-live-speed ce-mono"
+              onClick={onCycleSpeed}
+              title="Cambiar velocidad de simulación"
+            >
+              {simSpeed}×
+            </button>
+          )}
         </div>
 
         {/* IA Activa / Guía Zyro Button (§6.4 & §8.1) */}
@@ -395,66 +442,130 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         >
           <span className="ce-ai-chip__pulse" aria-hidden="true" />
           <Sparkles size={14} />
-          <span>IA activa</span>
+          {!isMobile && <span>IA activa</span>}
         </button>
 
-        {/* Theme Switcher (§7.5 Light / Dark Mode) */}
-        <button
-          type="button"
-          className="ce-icon-btn"
-          onClick={onToggleTheme}
-          title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-          aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-        >
-          {isDark ? <Sun size={17} /> : <Moon size={17} />}
-        </button>
+        {!isMobile ? (
+          <>
+            {/* Theme Switcher (§7.5 Light / Dark Mode) */}
+            <button
+              type="button"
+              className="ce-icon-btn"
+              onClick={onToggleTheme}
+              title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            >
+              {isDark ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
 
-        {/* Alerts Bell */}
-        <div className="ce-alerts-wrap">
+            {/* Alerts Bell */}
+            <div className="ce-alerts-wrap">
+              <button
+                type="button"
+                className="ce-icon-btn"
+                onClick={() => setAlertsOpen((o) => !o)}
+                aria-label="Notificaciones operativas"
+                title="Alertas operativas"
+              >
+                <Bell size={17} />
+                <span className="ce-notif-dot" />
+              </button>
+
+              {alertsOpen && (
+                <div className="ce-alerts-popover">
+                  <div className="ce-alerts-popover__head">
+                    <span>Eventos Operativos</span>
+                    <span className="ce-mono">3 activos</span>
+                  </div>
+                  <div className="ce-alert-item ce-alert-item--info">
+                    <strong>ⓘ Arribo en 1 min · CAM-2481</strong>
+                    <span>Bahía Ent. 2 asignada automáticamente en CD-04.</span>
+                  </div>
+                  <div className="ce-alert-item ce-alert-item--warn">
+                    <strong>! Stock bajo · Caja Corrugada (M)</strong>
+                    <span>893 unidades restantes en CD-02 Norte Principal.</span>
+                  </div>
+                  <div className="ce-alert-item ce-alert-item--ok">
+                    <strong>✓ Puntualidad sobre meta (98,2 %)</strong>
+                    <span>Despachos consolidados sin demoras en turno mañana.</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* User Profile */}
+            <div className="ce-user-chip">
+              <div className="ce-user-chip__avatar" aria-hidden="true">
+                CM
+              </div>
+              <div className="ce-user-chip__text">
+                <span className="ce-user-chip__name">Carlos Mendoza</span>
+                <span className="ce-user-chip__role">Gerente de Operaciones</span>
+              </div>
+            </div>
+          </>
+        ) : (
           <button
             type="button"
             className="ce-icon-btn"
-            onClick={() => setAlertsOpen((o) => !o)}
-            aria-label="Notificaciones operativas"
-            title="Alertas operativas"
+            onClick={() => setMobileMenuOpen((m) => !m)}
+            aria-label="Menú móvil"
           >
-            <Bell size={17} />
-            <span className="ce-notif-dot" />
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
-
-          {alertsOpen && (
-            <div className="ce-alerts-popover">
-              <div className="ce-alerts-popover__head">
-                <span> Eventos Operativos</span>
-                <span className="ce-mono">3 activos</span>
-              </div>
-              <div className="ce-alert-item ce-alert-item--info">
-                <strong>ⓘ Arribo en 1 min · CAM-2481</strong>
-                <span>Bahía Ent. 2 asignada automáticamente en CD-04.</span>
-              </div>
-              <div className="ce-alert-item ce-alert-item--warn">
-                <strong>! Stock bajo · Caja Corrugada (M)</strong>
-                <span>893 unidades restantes en CD-02 Norte Principal.</span>
-              </div>
-              <div className="ce-alert-item ce-alert-item--ok">
-                <strong>✓ Puntualidad sobre meta (98,2 %)</strong>
-                <span>Despachos consolidados sin demoras en turno mañana.</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* User Profile */}
-        <div className="ce-user-chip">
-          <div className="ce-user-chip__avatar" aria-hidden="true">
-            CM
-          </div>
-          <div className="ce-user-chip__text">
-            <span className="ce-user-chip__name">Carlos Mendoza</span>
-            <span className="ce-user-chip__role">Gerente de Operaciones</span>
-          </div>
-        </div>
+        )}
       </div>
+
+      {/* Mobile Full-Width Azul Noche Control Drawer (§7.1) */}
+      {isMobile && mobileMenuOpen && (
+        <div className="ce-mobile-drawer">
+          <div className="ce-mobile-drawer__head">
+            <img
+              src="/brand/ce-logo-horizontal-blanco.png"
+              alt="Canal Ejecutivo"
+              className="ce-brand-logo"
+            />
+            <span className="ce-overline" style={{ color: '#63EDFF' }}>
+              MENÚ OPERATIVO
+            </span>
+          </div>
+          <div className="ce-mobile-drawer__row">
+            <span>Velocidad de simulación</span>
+            <button
+              type="button"
+              className="ce-btn-primary ce-btn-primary--sm"
+              style={{ width: 'auto', padding: '0 14px' }}
+              onClick={onCycleSpeed}
+            >
+              {simSpeed}×
+            </button>
+          </div>
+          <div className="ce-mobile-drawer__row">
+            <span>Tema de interfaz</span>
+            <button
+              type="button"
+              className="ce-btn-primary ce-btn-primary--sm"
+              style={{ width: 'auto', padding: '0 14px' }}
+              onClick={onToggleTheme}
+            >
+              {isDark ? 'Modo Claro' : 'Modo Oscuro'}
+            </button>
+          </div>
+          <div className="ce-mobile-drawer__alerts">
+            <span className="ce-overline" style={{ color: '#8AB3FF' }}>
+              ALERTAS ACTIVAS
+            </span>
+            <div className="ce-alert-item ce-alert-item--info">
+              <strong>ⓘ Arribo en 1 min · CAM-2481</strong>
+              <span>Bahía Ent. 2 asignada en CD-04.</span>
+            </div>
+            <div className="ce-alert-item ce-alert-item--warn">
+              <strong>! Stock bajo · Caja Corrugada (M)</strong>
+              <span>893 u. restantes en CD-02.</span>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

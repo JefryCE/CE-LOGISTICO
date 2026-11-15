@@ -13,6 +13,7 @@ interface FleetSwitcherCardProps {
   trucks: TruckEntity[];
   forklifts: ForkliftEntity[];
   selectedObject: SelectedObject;
+  embedded?: boolean;
   onSelectObject: (obj: SelectedObject, siteId?: SiteId) => void;
 }
 
@@ -40,6 +41,7 @@ export const FleetSwitcherCard: React.FC<FleetSwitcherCardProps> = ({
   trucks,
   forklifts,
   selectedObject,
+  embedded = false,
   onSelectObject,
 }) => {
   const [tab, setTab] = useState<TabKey>('trucks');
@@ -53,7 +55,9 @@ export const FleetSwitcherCard: React.FC<FleetSwitcherCardProps> = ({
 
   return (
     <section
-      className="ce-switcher-card"
+      className={
+        embedded ? 'ce-switcher-card ce-switcher-card--embedded' : 'ce-switcher-card'
+      }
       aria-label="Flota y muelles de la sede activa"
     >
       {/* Tabs Header (Muelles / Montacargas / Camiones + Sede) */}

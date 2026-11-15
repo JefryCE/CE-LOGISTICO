@@ -17,8 +17,14 @@ import { RightInspectorPanel } from './components/ui/RightInspectorPanel';
 import { ShipmentTimelineCard } from './components/ui/ShipmentTimelineCard';
 import { FleetSwitcherCard } from './components/ui/FleetSwitcherCard';
 import { ZyroAiAssistantModal } from './components/ui/ZyroAiAssistantModal';
+import { MobileBottomDock } from './components/ui/MobileBottomDock';
+import { useViewport } from './hooks/useViewport';
 
 export const App: React.FC = () => {
+  const viewport = useViewport();
+  const { deviceType, width, height, isDesktop, isMobile } = viewport;
+  const viewportAspect = height > 0 ? width / height : 1.6;
+
   const [sites, setSites] = useState(INITIAL_SITES);
   const [trucks, setTrucks] = useState(INITIAL_TRUCKS);
   const [forklifts, setForklifts] = useState(INITIAL_FORKLIFTS);
@@ -206,7 +212,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="ce-app-shell">
+    <div className="ce-app-shell" data-device={deviceType}>
       {/* 1. Barra Superior Corporativa Canal Ejecutivo */}
       <TopNavBar
         sites={sites}
@@ -219,6 +225,7 @@ export const App: React.FC = () => {
         simSpeed={simSpeed}
         isDark={isDark}
         isAiOpen={isAiOpen}
+        deviceType={deviceType}
         onChangeScope={handleChangeScope}
         onSelectObject={handleSelectObject}
         onTogglePause={() => setIsPaused((p) => !p)}
@@ -227,7 +234,7 @@ export const App: React.FC = () => {
         onToggleAi={() => setIsAiOpen((o) => !o)}
       />
 
-      {/* 2. Franja de 3 KPIs Superiores Izquierdos */}
+      {/* 2. Franja de 3 KPIs (Carrusel horizontal en móvil, fila en tablet/PC) */}
       <KpiStrip
         sites={sites}
         trucks={trucks}
@@ -243,39 +250,62 @@ export const App: React.FC = () => {
         onApplyOptimization={handleApplyAiOptimization}
       />
 
-      {/* 4. Controles de Cámara + Inspector Contextual Derecho */}
-      <RightInspectorPanel
-        activeSite={activeSite}
-        trucks={trucks}
-        forklifts={forklifts}
-        selectedObject={selectedObject}
-        followTarget={followTarget}
-        onToggleFollow={() => setFollowTarget((f) => !f)}
-        onClearSelection={() => {
-          setSelectedObject(null);
-          setFollowTarget(false);
-        }}
-        onCameraAction={handleCameraAction}
-        onAdvanceTruckStep={handleAdvanceTruckStep}
-      />
+      {/* 4. Controles de Cámara + Inspector Contextual Derecho (Desktop y Tablet) */}
+      {!isMobile && (
+        <RightInspectorPanel
+          activeSite={activeSite}
+          trucks={trucks}
+          forklifts={forklifts}
+          selectedObject={selectedObject}
+          followTarget={followTarget}
+          onToggleFollow={() => setFollowTarget((f) => !f)}
+          onClearSelection={() => {
+            setSelectedObject(null);
+            setFollowTarget(false);
+          }}
+          onCameraAction={handleCameraAction}
+          onAdvanceTruckStep={handleAdvanceTruckStep}
+        />
+      )}
 
-      {/* 5. Seguimiento de Envío Horizontal (Inferior Izquierdo) */}
-      <ShipmentTimelineCard
-        trackedTruck={trackedTruck}
-        onCycleTruck={handleCycleShipmentTruck}
-        onFocusTruck={(id, siteId) =>
-          handleSelectObject({ type: 'truck', id }, siteId)
-        }
-      />
-
-      {/* 6. Conmutador Operativo Muelles / Montacargas / Camiones (Inferior Derecho) */}
-      <FleetSwitcherCard
-        activeSite={activeSite}
-        trucks={trucks}
-        forklifts={forklifts}
-        selectedObject={selectedObject}
-        onSelectObject={handleSelectObject}
-      />
+      {/* 5 & 6. En Desktop: tarjetas inferiores separadas; en Tablet/Móvil: Dock Adaptativo */}
+      {isDesktop ? (
+        <>
+          <ShipmentTimelineCard
+            trackedTruck={trackedTruck}
+            onCycleTruck={handleCycleShipmentTruck}
+            onFocusTruck={(id, siteId) =>
+              handleSelectObject({ type: 'truck', id }, siteId)
+            }
+          />
+          <FleetSwitcherCard
+            activeSite={activeSite}
+            trucks={trucks}
+            forklifts={forklifts}
+            selectedObject={selectedObject}
+            onSelectObject={handleSelectObject}
+          />
+        </>
+      ) : (
+        <MobileBottomDock
+          deviceType={deviceType}
+          activeSite={activeSite}
+          trucks={trucks}
+          forklifts={forklifts}
+          selectedObject={selectedObject}
+          trackedTruck={trackedTruck}
+          followTarget={followTarget}
+          onToggleFollow={() => setFollowTarget((f) => !f)}
+          onClearSelection={() => {
+            setSelectedObject(null);
+            setFollowTarget(false);
+          }}
+          onCameraAction={handleCameraAction}
+          onAdvanceTruckStep={handleAdvanceTruckStep}
+          onCycleShipmentTruck={handleCycleShipmentTruck}
+          onSelectObject={handleSelectObject}
+        />
+      )}
 
       {/* 7. Escena WebGL / Three.js en Tiempo Real */}
       <LogisticsScene
@@ -288,6 +318,8 @@ export const App: React.FC = () => {
         isPaused={isPaused}
         simSpeed={simSpeed}
         isDark={isDark}
+        deviceType={deviceType}
+        viewportAspect={viewportAspect}
         cameraCommand={cameraCommand}
         onSelectSite={(siteId) => handleChangeScope(siteId)}
         onSelectObject={handleSelectObject}
