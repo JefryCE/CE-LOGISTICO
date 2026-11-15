@@ -1,0 +1,81 @@
+{
+  "$schema": "https://tr.designtokens.org/format/",
+  "meta": {
+    "brand": "Canal Ejecutivo",
+    "version": "1.0.0",
+    "source": "CE_Manual_Identidad_Visual_v1.0.pdf"
+  },
+  "color": {
+    "blue": {
+      "50": { "$value": "#EEF4FF", "$type": "color" },
+      "100": { "$value": "#DCE8FF", "$type": "color" },
+      "200": { "$value": "#B9D1FF", "$type": "color" },
+      "300": { "$value": "#8AB3FF", "$type": "color" },
+      "400": { "$value": "#4D8EFF", "$type": "color" },
+      "500": { "$value": "#0866FF", "$type": "color", "origen": "verificado" },
+      "600": { "$value": "#0052DB", "$type": "color" },
+      "700": { "$value": "#0041AD", "$type": "color" },
+      "800": { "$value": "#063486", "$type": "color" },
+      "900": { "$value": "#0A2A66", "$type": "color" },
+      "950": { "$value": "#071A40", "$type": "color" }
+    },
+    "cyan": {
+      "300": { "$value": "#A9FEFF", "$type": "color" },
+      "400": { "$value": "#63EDFF", "$type": "color", "origen": "zyro" },
+      "500": { "$value": "#1FD3F0", "$type": "color" },
+      "600": { "$value": "#0AA5C2", "$type": "color" },
+      "700": { "$value": "#0A7E96", "$type": "color" },
+      "800": { "$value": "#0B6476", "$type": "color" }
+    },
+    "night": {
+      "700": { "$value": "#1E3158", "$type": "color" },
+      "800": { "$value": "#12213F", "$type": "color" },
+      "900": { "$value": "#0B1630", "$type": "color" },
+      "950": { "$value": "#050D1F", "$type": "color" }
+    },
+    "gray": {
+      "25": { "$value": "#F8FAFC", "$type": "color" },
+      "50": { "$value": "#F1F5F9", "$type": "color" },
+      "100": { "$value": "#E2E8F0", "$type": "color" },
+      "200": { "$value": "#CBD5E1", "$type": "color" },
+      "300": { "$value": "#94A3B8", "$type": "color" },
+      "400": { "$value": "#64748B", "$type": "color" },
+      "500": { "$value": "#475569", "$type": "color" },
+      "600": { "$value": "#334155", "$type": "color" },
+      "700": { "$value": "#1E293B", "$type": "color" },
+      "800": { "$value": "#111A2E", "$type": "color" },
+      "900": { "$value": "#0B1220", "$type": "color" }
+    },
+    "status": {
+      "success": { "$value": "#12B76A", "$type": "color" },
+      "successText": { "$value": "#067647", "$type": "color" },
+      "successBg": { "$value": "#ECFDF3", "$type": "color" },
+      "warning": { "$value": "#F79009", "$type": "color" },
+      "warningText": { "$value": "#B54708", "$type": "color" },
+      "warningBg": { "$value": "#FFFAEB", "$type": "color" },
+      "error": { "$value": "#F04438", "$type": "color" },
+      "errorText": { "$value": "#B42318", "$type": "color" },
+      "errorBg": { "$value": "#FEF3F2", "$type": "color" },
+      "info": { "$value": "#0866FF", "$type": "color" },
+      "infoText": { "$value": "#0041AD", "$type": "color" },
+      "infoBg": { "$value": "#EEF4FF", "$type": "color" }
+    }
+  },
+  "typography": {
+    "fontDisplay": { "$value": "'Chakra Petch', sans-serif" },
+    "fontBody": { "$value": "'Inter', sans-serif" },
+    "fontMono": { "$value": "'JetBrains Mono', monospace" }
+  },
+  "radius": {
+    "sm": { "$value": "4px" },
+    "md": { "$value": "8px" },
+    "lg": { "$value": "12px" },
+    "pill": { "$value": "9999px" }
+  },
+  "chamfer": {
+    "sm": { "$value": "8px" },
+    "md": { "$value": "14px" },
+    "lg": { "$value": "24px" }
+  }
+}
+

@@ -1,0 +1,147 @@
+/* ==========================================================================
+   CANAL EJECUTIVO — DESIGN TOKENS OFICIALES (Manual de Identidad Visual v1.0)
+   Capítulos 03 (Color), 04 (Tipografía), 05 (Geometría) y 07 (Interfaces)
+   ========================================================================== */
+
+:root {
+  /* 1. Escala Azul Ejecutivo (Primario Verificado #0866FF) */
+  --ce-blue-50: #EEF4FF;
+  --ce-blue-100: #DCE8FF;
+  --ce-blue-200: #B9D1FF;
+  --ce-blue-300: #8AB3FF;
+  --ce-blue-400: #4D8EFF;
+  --ce-blue-500: #0866FF;
+  --ce-blue-600: #0052DB;
+  --ce-blue-700: #0041AD;
+  --ce-blue-800: #063486;
+  --ce-blue-900: #0A2A66;
+  --ce-blue-950: #071A40;
+
+  /* 2. Escala Cian Zyro (Acento IA <= 5 %, nunca texto sobre blanco) */
+  --ce-cyan-300: #A9FEFF;
+  --ce-cyan-400: #63EDFF;
+  --ce-cyan-500: #1FD3F0;
+  --ce-cyan-600: #0AA5C2;
+  --ce-cyan-700: #0A7E96;
+  --ce-cyan-800: #0B6476;
+
+  /* 3. Escala Azul Noche */
+  --ce-night-700: #1E3158;
+  --ce-night-800: #12213F;
+  --ce-night-900: #0B1630;
+  --ce-night-950: #050D1F;
+
+  /* 4. Escala Grises Grafito y Tinta */
+  --ce-white: #FFFFFF;
+  --ce-gray-25: #F8FAFC;
+  --ce-gray-50: #F1F5F9;
+  --ce-gray-100: #E2E8F0;
+  --ce-gray-200: #CBD5E1;
+  --ce-gray-300: #94A3B8;
+  --ce-gray-400: #64748B;
+  --ce-gray-500: #475569;
+  --ce-gray-600: #334155;
+  --ce-gray-700: #1E293B;
+  --ce-gray-800: #111A2E;
+  --ce-gray-900: #0B1220; /* Tinta */
+
+  /* 5. Colores Funcionales WCAG 2.2 AA (§3.4) */
+  --ce-success-500: #12B76A;
+  --ce-success-text: #067647;
+  --ce-success-bg: #ECFDF3;
+  --ce-warning-500: #F79009;
+  --ce-warning-text: #B54708;
+  --ce-warning-bg: #FFFAEB;
+  --ce-error-500: #F04438;
+  --ce-error-text: #B42318;
+  --ce-error-bg: #FEF3F2;
+  --ce-info-500: #0866FF;
+  --ce-info-text: #0041AD;
+  --ce-info-bg: #EEF4FF;
+
+  /* 6. Tipografía (§4.1) */
+  --ce-font-display: 'Chakra Petch', 'Bahnschrift', sans-serif;
+  --ce-font-body: 'Inter', 'Segoe UI', Arial, sans-serif;
+  --ce-font-mono: 'JetBrains Mono', Consolas, monospace;
+
+  /* 7. Geometría, Radios y Chaflanes (§5.1 - §5.2) */
+  --ce-radius-sm: 4px;
+  --ce-radius-md: 8px;
+  --ce-radius-lg: 12px;
+  --ce-radius-pill: 9999px;
+  --ce-chamfer-sm: 8px;
+  --ce-chamfer-md: 14px;
+  --ce-chamfer-lg: 24px;
+
+  /* 8. Espaciado Base 8 (§5.4) */
+  --ce-space-1: 4px;
+  --ce-space-2: 8px;
+  --ce-space-3: 12px;
+  --ce-space-4: 16px;
+  --ce-space-5: 20px;
+  --ce-space-6: 24px;
+  --ce-space-8: 32px;
+
+  /* 9. Gradientes Permitidos (§5.2) */
+  --ce-grad-brand: linear-gradient(135deg, #0866FF 0%, #0041AD 100%);
+  --ce-grad-night: linear-gradient(160deg, #0B1630 0%, #050D1F 100%);
+  --ce-grad-signal: linear-gradient(90deg, #0866FF 0%, #63EDFF 100%);
+
+  /* 10. Tokens Semánticos — Modo Claro por defecto (§3.3 y §7.5) */
+  --ce-bg-canvas: #E9EFF7;
+  --ce-surface-header: rgba(255, 255, 255, 0.92);
+  --ce-surface-card: rgba(255, 255, 255, 0.93);
+  --ce-surface-subtle: #F8FAFC;
+  --ce-surface-hover: #F1F5F9;
+  --ce-surface-active: #EEF4FF;
+  --ce-border-default: #E2E8F0;
+  --ce-border-strong: #CBD5E1;
+  --ce-text-primary: #0B1220;
+  --ce-text-secondary: #475569;
+  --ce-text-muted: #64748B;
+  --ce-color-brand: #0866FF;
+  --ce-color-brand-hover: #0052DB;
+  --ce-text-on-brand: #FFFFFF;
+  --ce-focus-ring: rgba(8, 102, 255, 0.35);
+
+  /* Sombras frías base Tinta #0B1220 <= 16% (§5.2) */
+  --ce-shadow-1: 0 4px 16px rgba(11, 18, 32, 0.08), 0 1px 3px rgba(11, 18, 32, 0.05);
+  --ce-shadow-2: 0 10px 28px rgba(11, 18, 32, 0.12), 0 2px 6px rgba(11, 18, 32, 0.06);
+  --ce-shadow-3: 0 20px 44px rgba(11, 18, 32, 0.16);
+  --ce-shadow-brand: 0 6px 18px rgba(8, 102, 255, 0.28);
+}
+
+/* Tokens Semánticos — Modo Oscuro sobre Azul Noche (§3.3, §7.4 y §7.5) */
+[data-theme='dark'] {
+  --ce-bg-canvas: #050D1F;
+  --ce-surface-header: rgba(5, 13, 31, 0.92);
+  --ce-surface-card: rgba(11, 22, 48, 0.92);
+  --ce-surface-subtle: #12213F;
+  --ce-surface-hover: #1E3158;
+  --ce-surface-active: rgba(8, 102, 255, 0.18);
+  --ce-border-default: #12213F;
+  --ce-border-strong: #1E3158;
+  --ce-text-primary: #F1F5F9;
+  --ce-text-secondary: #B6C2D4;
+  --ce-text-muted: #94A3B8;
+  --ce-color-brand: #0866FF;
+  --ce-color-brand-hover: #4D8EFF;
+  --ce-text-on-brand: #FFFFFF;
+  --ce-focus-ring: rgba(99, 237, 255, 0.45);
+
+  /* En modo oscuro la elevación se expresa con superficies y bordes, sin sombras pesadas */
+  --ce-shadow-1: 0 2px 10px rgba(0, 0, 0, 0.25);
+  --ce-shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --ce-shadow-3: 0 16px 36px rgba(0, 0, 0, 0.45);
+  --ce-shadow-brand: 0 6px 18px rgba(8, 102, 255, 0.35);
+
+  --ce-success-text: #6CE9A6;
+  --ce-success-bg: rgba(18, 183, 106, 0.16);
+  --ce-warning-text: #FEC84B;
+  --ce-warning-bg: rgba(247, 144, 9, 0.16);
+  --ce-error-text: #FDA29B;
+  --ce-error-bg: rgba(240, 68, 56, 0.16);
+  --ce-info-text: #8AB3FF;
+  --ce-info-bg: rgba(8, 102, 255, 0.2);
+}
+
