@@ -59,7 +59,7 @@ export const ZyroAiAssistantModal: React.FC<ZyroAiAssistantModalProps> = ({
         {/* Zyro Onboarding Guide Bubble (tuteo, frases cortas y claras según §6.1) */}
         <div className="ce-zyro-msg">
           <p>
-            ¡Hola! Soy <strong>Zyro</strong>. Explora el gemelo digital 3D de{' '}
+            ¡Hola! Soy <strong>Zyro</strong>. Explora el Sistema de Simulación Logístico 3D de{' '}
             <strong>Canal Ejecutivo</strong>:
           </p>
           <ul className="ce-zyro-steps">

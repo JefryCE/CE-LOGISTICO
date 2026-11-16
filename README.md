@@ -1,6 +1,6 @@
-# Canal Ejecutivo · Gemelo Digital Logístico 3D
+# Canal Ejecutivo · Sistema de Simulación Logístico 3D
 
-Simulación web 3D interactiva en tiempo real construida en español para **Canal Ejecutivo**, inspirada en la arquitectura operativa del gemelo logístico de referencia y diseñada siguiendo estrictamente el **Manual de Identidad Visual Corporativa v1.0** (`CE_Manual_Identidad_Visual_v1.0.pdf`).
+Sistema de Simulación Logístico 3D interactivo en tiempo real construido en español para **Canal Ejecutivo**, diseñado siguiendo estrictamente el **Manual de Identidad Visual Corporativa v1.0** (`CE_Manual_Identidad_Visual_v1.0.pdf`).
 
 ## Ejecución Rápida
 

@@ -1,8 +1,8 @@
 {
-  "name": "canal-ejecutivo-gemelo-logistico-3d",
+  "name": "canal-ejecutivo-sistema-simulacion-logistico-3d",
   "private": true,
   "version": "1.0.0",
-  "description": "Simulación 3D Interactiva de Operaciones y Gemelo Digital Logístico — Canal Ejecutivo",
+  "description": "Sistema de Simulación Logístico 3D en Tiempo Real — Canal Ejecutivo",
   "type": "module",
   "scripts": {
     "dev": "vite --port 5173 --host",

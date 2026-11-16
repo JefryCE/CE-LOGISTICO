@@ -189,7 +189,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         </a>
         <span className="ce-brand-bar" aria-hidden="true" />
         <div className="ce-brand-product">
-          <span className="ce-brand-product__overline">GEMELO DIGITAL 3D</span>
+          <span className="ce-brand-product__overline">SISTEMA DIGITAL 3D</span>
           <span className="ce-brand-product__title">Operaciones Logísticas</span>
         </div>
       </div>
